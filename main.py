@@ -9,25 +9,30 @@ G2 = 18
 pi.set_mode(G1, pigpio.OUTPUT)
 pi.set_mode(G2, pigpio.OUTPUT)
 
-def writeData(data):
+waves = []
+
+
+def add_wave(data):
     wave = []
     for bit in data:
-        #print bit
         if bit == "0":
-            writeZero(wave)
+            write_zero(wave)
         else:
-            writeOne(wave)
-    pi.wave_tx_stop()
-    pi.wave_clear()
+            write_one(wave)
+
     pi.wave_add_generic(wave)
     ft = pi.wave_create()
-    pi.wave_send_repeat(ft)
+    waves.append(ft)
+    return ft
+    #pi.wave_send_repeat(ft)
 
-def writeZero(wave):
+
+def write_zero(wave):
     wave.append(pigpio.pulse(1 << G1, 0, 100))
     wave.append(pigpio.pulse(0, 1 << G1, 100))
 
-def writeOne(wave):
+
+def write_one(wave):
     wave.append(pigpio.pulse(1 << G1, 0, 58))
     wave.append(pigpio.pulse(0, 1 << G1, 58))
 

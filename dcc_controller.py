@@ -20,7 +20,7 @@
 import time
 import threading
 import sys
-
+import main
 
 class DCCController(object):
     """
@@ -81,9 +81,11 @@ class DCCController(object):
 
     def update_payload(self, device_name='*'):
         # t0 = time.clock()
+        main.waves = []
         packets = []
         for name, device in self.devices.iteritems():
-            packets += device.control_packets()
+            #packets += device.control_packets()
+            main.add_wave(device.control_packets())
 
         self.dcc_encoder.payload = packets
         # t1 = time.clock()
@@ -132,7 +134,7 @@ class DCCControllerThread(threading.Thread):
             while(True):
                 state = self.dcc_controller.state
                 if state is 'idle':
-                    self.dcc_encoder.send_idle(1)
+                    #self.dcc_encoder.send_idle(1)
                     idle_count += 1
                     if idle_count >= 250:
                         # Resending the payload causes some

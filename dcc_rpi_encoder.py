@@ -98,7 +98,7 @@ class DCCRPiEncoder(DCCEncoder):
     def send_bit_string(self, bit_string, times):
         for i in range(0, times):
             #print(bit_string)
-            main.writeData(bit_string)
+            main.add_wave(bit_string)
         return True
 
     def tracks_power_on(self):
