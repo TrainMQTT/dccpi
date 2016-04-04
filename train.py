@@ -4,8 +4,10 @@ from dcc_controller import *
 import paho.mqtt.client as mqtt
 
 
-# SETUP MQTT
+main.clear()
 
+
+# SETUP MQTT
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe("dcc/in")
@@ -17,7 +19,12 @@ def on_message(client, userdata, msg):
         l1.stop()
     elif msg.payload == "switch":
         l1.reverse()
-        l1.speed = 10
+        l1.speed = 5
+    elif msg.payload == "waves":
+        for wave in main.waves:
+            print wave
+            print main.wave_data[wave]
+            print "-----------\n"
 
 client = mqtt.Client()
 client.on_connect = on_connect

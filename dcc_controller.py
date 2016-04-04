@@ -81,13 +81,15 @@ class DCCController(object):
 
     def update_payload(self, device_name='*'):
         # t0 = time.clock()
-        main.waves = []
-        packets = []
+        main.reset()
+        #packets = []
         for name, device in self.devices.iteritems():
-            #packets += device.control_packets()
-            main.add_wave(device.control_packets())
+            packets = device.control_packets()
+            for packet in packets:
+                print packet
+                main.add_wave(packet.to_bit_string())
 
-        self.dcc_encoder.payload = packets
+        #self.dcc_encoder.payload = packets
         # t1 = time.clock()
         # print("DCC payload updated (in %f seconds)" % (t1 - t0))
         if self._thread:
@@ -134,13 +136,14 @@ class DCCControllerThread(threading.Thread):
             while(True):
                 state = self.dcc_controller.state
                 if state is 'idle':
+                    pass
                     #self.dcc_encoder.send_idle(1)
-                    idle_count += 1
-                    if idle_count >= 250:
+                    #idle_count += 1
+                    #if idle_count >= 250:
                         # Resending the payload causes some
                         # flickering in the lights, but we have
                         # to in case the loco didn't get it
-                        self.dcc_controller.state = 'newpayload'
+                        #self.dcc_controller.state = 'newpayload'
                 elif state is 'startup':
                     self.dcc_encoder.tracks_power_on()
                     self.dcc_encoder.send_reset(2)

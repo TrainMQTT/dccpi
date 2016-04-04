@@ -45,8 +45,7 @@ class DCCRPiEncoder(DCCEncoder):
         actual value, it can be adjusted here.
 
         Currently only bit_X_part_duration and packet_separation are used.
-
-        Older decoders need a 5ms packet separation. Performance should improve
+`n. Performance should improve
         by making it 0 if working with new decoders.
         """
 
@@ -89,11 +88,17 @@ class DCCRPiEncoder(DCCEncoder):
         self.send_bit_string(self._reset_packet_string, times)
 
     def send_payload(self, times):
+        if len(main.waves):
+            main.send_waves()
+            return True
+        return False
+        '''
         if len(self._string_payload):
             self.send_bit_string(self._string_payload, times)
             return True
         else:
             return False
+        '''
 
     def send_bit_string(self, bit_string, times):
         for i in range(0, times):
