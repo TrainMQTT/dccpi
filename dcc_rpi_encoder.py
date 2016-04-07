@@ -60,6 +60,8 @@ class DCCRPiEncoder(DCCEncoder):
 
         self._string_payload = ""
         self._idle_packet_string = self.idle_packet.to_bit_string()
+        main.idle_wave_id = main.encode(self._idle_packet_string)
+        main.idle_wave_data = self._idle_packet_string
         self._reset_packet_string = self.reset_packet.to_bit_string()
         self._stop_packet_string = self.stop_packet.to_bit_string()
 
@@ -74,36 +76,13 @@ class DCCRPiEncoder(DCCEncoder):
                          packets)
         self._string_payload = ",".join(bitstrings)
 
-    def send_packet(self, packet, times):
-        packet_string = packet.to_bit_string()
-        return self.send_bit_string(packet_string + ",", times)
-
-    def send_idle(self, times):
-        self.send_bit_string(self._idle_packet_string, times)
-
-    def send_stop(self, times):
-        self.send_bit_string(self._stop_packet_string, times)
-
-    def send_reset(self, times):
-        self.send_bit_string(self._reset_packet_string, times)
-
     def send_payload(self, times):
         if len(main.waves):
             main.send_waves()
             return True
         return False
-        '''
-        if len(self._string_payload):
-            self.send_bit_string(self._string_payload, times)
-            return True
-        else:
-            return False
-        '''
 
-    def send_bit_string(self, bit_string, times):
-        for i in range(0, times):
-            #print(bit_string)
-            main.add_wave(bit_string)
+    def send_packet(self, packet, times):
         return True
 
     def tracks_power_on(self):

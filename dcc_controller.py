@@ -80,18 +80,12 @@ class DCCController(object):
         self.update_payload()
 
     def update_payload(self, device_name='*'):
-        # t0 = time.clock()
         main.reset()
-        #packets = []
         for name, device in self.devices.iteritems():
             packets = device.control_packets()
             for packet in packets:
-                print packet
+                #print packet
                 main.add_wave(packet.to_bit_string())
-
-        #self.dcc_encoder.payload = packets
-        # t1 = time.clock()
-        # print("DCC payload updated (in %f seconds)" % (t1 - t0))
         if self._thread:
             self.state = 'newpayload'
 

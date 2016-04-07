@@ -19,12 +19,30 @@ def on_message(client, userdata, msg):
         l1.stop()
     elif msg.payload == "switch":
         l1.reverse()
-        l1.speed = 5
+    elif msg.payload == "faster":
+        if l1.speed < 128:
+            new_speed = (l1.speed + 8)
+            l1.speed = new_speed
+        else:
+            l1.speed = 128
+    elif msg.payload == "slower":
+        if l1.speed > 0:
+            new_speed = (l1.speed - 8)
+            l1.speed = new_speed
+        else:
+            l1.speed = 0
     elif msg.payload == "waves":
         for wave in main.waves:
             print wave
             print main.wave_data[wave]
             print "-----------\n"
+        print "idle"
+        print main.idle_wave_data
+        print "++++++++++\n"
+    elif msg.payload == "on":
+        main.turn_on()
+    elif msg.payload == "off":
+        main.turn_off()
 
 client = mqtt.Client()
 client.on_connect = on_connect
@@ -40,6 +58,7 @@ e = DCCRPiEncoder()
 controller = DCCController(e)
 l1 = DCCLocomotive("DCC10", 10)
 controller.register(l1)
+l1.speed_steps = 128
 l1.speed = 0
 l1.reverse()
 controller.start()
