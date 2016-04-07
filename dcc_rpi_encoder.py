@@ -19,7 +19,7 @@
 
 from dcc_encoder import DCCEncoder
 import operator
-import main
+import coms
 
 class DCCRPiEncoder(DCCEncoder):
     """
@@ -60,8 +60,8 @@ class DCCRPiEncoder(DCCEncoder):
 
         self._string_payload = ""
         self._idle_packet_string = self.idle_packet.to_bit_string()
-        main.idle_wave_id = main.encode(self._idle_packet_string)
-        main.idle_wave_data = self._idle_packet_string
+        coms.idle_wave_id = coms.encode(self._idle_packet_string)
+        coms.idle_wave_data = self._idle_packet_string
         self._reset_packet_string = self.reset_packet.to_bit_string()
         self._stop_packet_string = self.stop_packet.to_bit_string()
 
@@ -77,8 +77,8 @@ class DCCRPiEncoder(DCCEncoder):
         self._string_payload = ",".join(bitstrings)
 
     def send_payload(self, times):
-        if len(main.waves):
-            main.send_waves()
+        if len(coms.waves):
+            coms.send_waves()
             return True
         return False
 

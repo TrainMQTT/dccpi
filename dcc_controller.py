@@ -20,7 +20,7 @@
 import time
 import threading
 import sys
-import main
+import coms
 
 class DCCController(object):
     """
@@ -80,12 +80,12 @@ class DCCController(object):
         self.update_payload()
 
     def update_payload(self, device_name='*'):
-        main.reset()
+        coms.reset()
         for name, device in self.devices.iteritems():
             packets = device.control_packets()
             for packet in packets:
                 #print packet
-                main.add_wave(packet.to_bit_string())
+                coms.add_wave(packet.to_bit_string())
         if self._thread:
             self.state = 'newpayload'
 
