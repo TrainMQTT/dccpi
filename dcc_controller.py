@@ -64,10 +64,12 @@ class DCCController(object):
 
     def register(self, dcc_device):
         dcc_device.notify_update_callback = self.update_payload
-        self.devices[dcc_device.name] = dcc_device
+        self.devices[dcc_device.address] = dcc_device
         print("%s registered on address #%s" % (dcc_device.name,
                                                 dcc_device.address))
         self.update_payload()
+    def getLocomotive(address):
+	return self.devices[address];
 
     def unregister(self, dcc_device):
         if type(dcc_device) is str:

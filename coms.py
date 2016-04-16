@@ -1,9 +1,9 @@
 import pigpio
 
 # setup py ip port and gpio pins
-pi = pigpio.pi("10.0.0.112", 8888)
-G1 = 13
-G2 = 18
+pi = pigpio.pi("127.0.0.1", 8888)
+G1 = 18 # Wave pin 18=pin 12
+G2 = 17 # On off pin 17=pin 11
 
 pi.set_mode(G1, pigpio.OUTPUT)
 pi.set_mode(G2, pigpio.OUTPUT)

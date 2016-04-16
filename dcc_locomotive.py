@@ -28,7 +28,6 @@ class DCCLocomotive(object):
     as well as function group one packets (for the moment)
     """
     def __init__(self,
-                 name,
                  address,
                  speed=0,
                  speed_steps=28,  # 14, 28, 128
@@ -44,7 +43,6 @@ class DCCLocomotive(object):
         # This will be set by the controller
         self.notify_update_callback = None
 
-        self.name = name
         self._address = address
         self.direction = direction
         self._speed = 0
@@ -61,14 +59,13 @@ class DCCLocomotive(object):
     def __str__(self):
         str = """
 DCC locomotive
-Name:               %s
 Address:            %i
 Speed:              %i
 Speed steps:        %i
 Direction:          %i
 FL, F1, F2, F3, F4: [%i %i %i %i %i]
 """
-        return str % (self.name, self.address, self.speed, self.speed_steps,
+        return str % (self.address, self.speed, self.speed_steps,
                       self.direction, self.fl, self.f1, self.f2,
                       self.f3, self.f4)
 
