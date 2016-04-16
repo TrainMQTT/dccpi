@@ -3,6 +3,7 @@ from dcc_locomotive import *
 from dcc_controller import *
 from TrainMQTT import *
 import paho.mqtt.client as mqtt
+import time
 
 coms.clear()
 
@@ -16,30 +17,30 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     command = TMQTT.deserialize(msg.payload);
-    if command['type'] === 'DCCPi':
-        if command['action'] === 'reboot':
+    if command['type'] == 'DCCPi':
+        if command['action'] == 'reboot':
             controller.stop()
             controller.start()
-        if command['action'] === 'start':
+        if command['action'] == 'start':
             controller.start()
-        if command['action'] === 'stop':
+        if command['action'] == 'stop':
             controller.stop()
 
-    if command['type'] === 'Engine':
+    if command['type'] == 'Engine':
     	exists = controller.getLocomotive(command['address'])
         loco
     	if not exists:
     		loco = DCCLocomotive(command['id'], command['address'])
     		controller.register(loco)
-        else
+        else:
             loco = exists
 
         TMQTT.mapFrom(command).mapTo(loco);
 
-    if command['type'] === 'Power':
+    if command['type'] == 'Power':
         if command['state']:
             coms.turn_on()
-        else
+        else:
             coms.turn_off()
 
 #Make MQTT Client
@@ -53,3 +54,7 @@ client.loop_start()
 e = DCCRPiEncoder()
 controller = DCCController(e)
 controller.start()
+
+#Keep Script alive
+while True:
+    time.sleep(1)
