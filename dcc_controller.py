@@ -65,12 +65,14 @@ class DCCController(object):
     def register(self, dcc_device):
         dcc_device.notify_update_callback = self.update_payload
         self.devices[dcc_device.address] = dcc_device
-        print("%s registered on address #%s" % (dcc_device.name,
-                                                dcc_device.address))
+        print("Registered on address #%s" % dcc_device.address)
         self.update_payload()
 
-    def getLocomotive(address):
-	    return self.devices[address];
+    def getLocomotive(self, address):
+	if address in self.devices:
+		return self.devices[address]
+	else:
+		return False
 
     def unregister(self, dcc_device):
         if type(dcc_device) is str:
@@ -99,7 +101,7 @@ class DCCController(object):
         print("Starting DCC Controller")
         self._thread = DCCControllerThread(self)
         self.state = 'startup'
-	    self._thread.daemon = True
+        self._thread.daemon = True
         self._thread.start()
 
     def stop(self):

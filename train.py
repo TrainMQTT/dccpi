@@ -17,6 +17,8 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     command = TMQTT.deserialize(msg.payload);
+    if not 'type' in command:
+	return
     if command['type'] == 'DCCPi':
         if command['action'] == 'reboot':
             controller.stop()
@@ -28,9 +30,9 @@ def on_message(client, userdata, msg):
 
     if command['type'] == 'Engine':
     	exists = controller.getLocomotive(command['address'])
-        loco
+
     	if not exists:
-    		loco = DCCLocomotive(command['id'], command['address'])
+    		loco = DCCLocomotive(command['address'])
     		controller.register(loco)
         else:
             loco = exists

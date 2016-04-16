@@ -3,20 +3,25 @@ class TrainMQTT:
 
 	def deserialize(self, nvp):
 		base = {}
-		print nvp
 		list = nvp.split('&')
-		print list
 		for pair in list:
-			print pair
 			nv = pair.split('=')
-			print nv
-			base[nv[0]] = nv[1]
+			if len(nv) == 2:
+				value = u""
+				value = unicode(nv[1],'utf-8')
+				if value.isnumeric():
+					value = int(value)
+				elif value.isdecimal():
+					value = float(value)
+				base[nv[0]] = value
 		return base
 
 	def mapFrom(self, obj):
 		self.fromHere = obj
+		return self
 
 	def mapTo(self, obj):
 		for propertyName in dir(obj):
-			if obj[propertyName] and self.fromHere[propertyName]:
-				obj[propertyName] = self.fromHere[propertyName]
+			if hasattr(obj, propertyName) and propertyName in self.fromHere:
+				setattr(obj, propertyName, self.fromHere[propertyName])
+		return self
