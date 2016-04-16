@@ -99,7 +99,7 @@ class DCCController(object):
         print("Starting DCC Controller")
         self._thread = DCCControllerThread(self)
         self.state = 'startup'
-	self._thread.daemon = True
+	    self._thread.daemon = True
         self._thread.start()
 
     def stop(self):

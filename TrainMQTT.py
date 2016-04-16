@@ -3,9 +3,13 @@ class TrainMQTT:
 
 	def deserialize(self, nvp):
 		base = {}
+		print nvp
 		list = nvp.split('&')
+		print list
 		for pair in list:
+			print pair
 			nv = pair.split('=')
+			print nv
 			base[nv[0]] = nv[1]
 		return base
 
