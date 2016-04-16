@@ -223,4 +223,4 @@ FL, F1, F2, F3, F4: [%i %i %i %i %i]
         of packets with updated information for the encoder
         """
         if self.notify_update_callback:
-            self.notify_update_callback(self.name)
+            self.notify_update_callback(self.address)

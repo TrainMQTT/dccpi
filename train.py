@@ -4,70 +4,52 @@ from dcc_controller import *
 from TrainMQTT import *
 import paho.mqtt.client as mqtt
 
-
 coms.clear()
 
+#Get TrainMQTT instance
+TMQTT = TrainMQTT();
 
-# SETUP MQTT
+# SETUP MQTT Listeners
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe("dcc/in")
-
+    client.subscribe("DCC")
 
 def on_message(client, userdata, msg):
-    command = TrainMQTT.deserialize(msg.payload);
+    command = TMQTT.deserialize(msg.payload);
+    if command['type'] === 'DCCPi':
+        if command['action'] === 'reboot':
+            controller.stop()
+            controller.start()
+        if command['action'] === 'start':
+            controller.start()
+        if command['action'] === 'stop':
+            controller.stop()
 
     if command['type'] === 'Engine':
-	exists = controller.getLocomotive(command['address'])
-	if not exists:
-		loco = DCCLocomotive(command['id'], command['address'])
-		controller.register(loco)
-	
-    print(msg.topic+" "+str(msg.payload))
-    if msg.payload == "stop":
-        l1.stop()
-    elif msg.payload == "switch":
-        l1.reverse()
-    elif msg.payload == "faster":
-        if l1.speed < 128:
-            new_speed = (l1.speed + 8)
-            l1.speed = new_speed
-        else:
-            l1.speed = 128
-    elif msg.payload == "slower":
-        if l1.speed > 0:
-            new_speed = (l1.speed - 8)
-            l1.speed = new_speed
-        else:
-            l1.speed = 0
-    elif msg.payload == "waves":
-        print "Following are the waves"
-        for wave in coms.waves:
-            print wave
-            print coms.wave_data[wave]
-            print "-----------\n"
-        print "idle"
-        print coms.idle_wave_data
-        print "++++++++++\n"
-    elif msg.payload == "on":
-        coms.turn_on()
-    elif msg.payload == "off":
-        coms.turn_off()
+    	exists = controller.getLocomotive(command['address'])
+        loco
+    	if not exists:
+    		loco = DCCLocomotive(command['id'], command['address'])
+    		controller.register(loco)
+        else
+            loco = exists
 
+        TMQTT.mapFrom(command).mapTo(loco);
+
+    if command['type'] === 'Power':
+        if command['state']:
+            coms.turn_on()
+        else
+            coms.turn_off()
+
+#Make MQTT Client
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect("127.0.0.1", 1883, 60)
 client.loop_start()
 
-
-# Do Train stuff
-
+# Start Controller
 e = DCCRPiEncoder()
 controller = DCCController(e)
-l1 = DCCLocomotive("DCC10", 10)
-controller.register(l1)
-l1.speed_steps = 128
-l1.speed = 0
-l1.reverse()
 controller.start()
